@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS Kota Bandung</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        
+  .toggle-theme {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+
+  body.dark-mode {
+    background-color: #222;
+    color: #fff;
+  }
+
+  body.dark-mode .leaflet-control-container {
+    filter: invert(0.9) hue-rotate(180deg);
+  }
+
+
+        /* CSS untuk mengatur video fullscreen dan teks di tengah */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Mengatur tinggi hero section menjadi 100% dari viewport */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Menambahkan overlay gelap */
+            z-index: 2;
+        }
+
+        .intro {
+            position: relative;
+            z-index: 3; /* Menempatkan teks di atas overlay */
+            color: rgb(255, 255, 255); /* Mengatur warna teks */
+            text-align: center; /* Mengatur teks agar berada di tengah */
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .title-container {
+            background-color: rgba(145, 15, 15, 0); /* Background putih transparan */
+            padding: 20px; /* Memberikan padding untuk ruang di sekitar teks */
+            border-radius: 5px; /* Menambahkan sudut yang membulat */
+            margin: 0 auto;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-
+    button.css">
+    
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-
+    fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+    
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    
+    <link rel="stylesheet" href="https://balladaniel.github.io/leaflet-dataclassification/leaflet-
+    dataclassification.css" />
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-
+20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-
+fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+charset="utf-8"></script>
+
+<script src="https://balladaniel.github.io/leaflet-dataclassification/leaflet-
+dataclassification.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script src="https://unpkg.com/leaflet.gridlayer.googlemutant@0.11.2/Leaflet.GoogleMutant.js"></script>
+
+
+</head>
+<body>
+    <header id="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Kembang Kota</h1>
+                <img src="asset/bouquet-removebg-preview.png" alt="Logo" width="100">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#hero-section">Beranda</a></li>
+                    <li><a href="#map-section">Peta</a></li>
+                    <li><a href="#data-section">Informasi</a></li>
+                    <li><a href="#footer">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="hero-section" class="hero-section">
+        <div class="overlay"></div>
+        <video autoplay muted loop>
+            <source src="asset/Flowers.mp4" type="video/mp4"/>
+        </video>
+        <div class="intro">
+            <div class="title-container">
+                <h1>FLOWER ON MAP</h1>
+                <p>Wesbsite Sebaran Florist di Kota Bandung</p>
+            </div>
+        </div>
+    </div>
+    <div id="map-section">
+        <h2>Peta Sebaran Florist di Kota Bandung</h2>
+        <div id="map">
+        <!-- akan muncul peta disini -->
+        </div>
+        <style>
+
+
+            .data-icon img {
+                width: 10000%;
+                max-width: 900px; /* Gambar maksimal 400px lebarnya */
+                height: 100%;
+                display: block;
+                margin: 0 auto;
+            }
+        
+            .data-item {
+                text-align: center;
+                margin-bottom: 80px;
+            }
+        </style>
+        
+        <div id="data-section">
+            <h2>Informasi</h2>
+            <h2>Kenapa Bandung disebut sebagai Kota Kembang</h2>
+            <div class="container">
+                <div class="column">
+                    <div class="data-item">
+                        <div class="data-icon">
+                            <img src="asset/tangkuban.jpg" alt="Jumlah Penduduk">
+                        </div>
+                        <div class="description">
+                            <h3>Keindahan Alam</h3>
+                            <p>Sejak zaman kolonial Belanda, Bandung dikenal dengan udaranya yang sejuk dan dikelilingi oleh pegunungan serta kebun-kebun bunga yang indah. 
+                                Keindahan alam ini membuat Bandung dijuluki "Kota Kembang" karena dianggap secantik bunga yang sedang mekar.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="data-item">
+                        <div class="data-icon">
+                            <img src="asset/cihideung.jpg" alt="Laju Pertumbuhan Ekonomi">
+                        </div>
+                        <div class="description">
+                            <h3>Pusat Budidaya dan Penjualan Bunga</h3>
+                            <p>Di masa lalu, Bandung merupakan salah satu pusat budidaya tanaman hias dan bunga di Indonesia. Banyak taman bunga dan pasar bunga bermunculan, 
+                                terutama di daerah seperti Cihideung, Lembang, dan sekitarnya. Ini semakin menguatkan identitas Bandung sebagai kota yang "berkembang" dan penuh bunga.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="data-item">
+                        <div class="data-icon">
+                            <img src="asset/gedung merdeka.jpg" alt="Kejadian Bencana Alam">
+                        </div>
+                        <div class="description">
+                            <h3>Julukan Simbolik untuk Perempuan Bandung</h3>
+                            <p>Istilah "Kota Kembang" juga merupakan ungkapan simbolik yang menggambarkan perempuan-perempuan Bandung yang dikenal cantik dan anggun. 
+                                Pada masa kolonial, Bandung sering menjadi tempat rekreasi kaum elit Belanda, dan mereka menyebut kota ini sebagai tempat yang penuh "kembang" (perempuan cantik).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <style>
+        .profile-picture {
+            width: 100px; /* Atur ukuran gambar */
+            height: 100px;
+            object-fit: cover; /* Potong gambar agar rapi */
+            border-radius: 50%; /* Buat gambar jadi lingkaran */
+            display: block;
+            margin: 20px auto;
+            border: 4px solid #ccc; /* Opsional: tambahkan border */
+        }
+    
+        .author-content {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+    
+    <div id="footer">
+        <div class="author-content">
+            <h2>Tentang Pembuat</h2>
+            <img src="asset/IMG_6866.JPG" alt="Profile Picture" class="profile-picture">
+            <div class="author-name">
+                <h3>Vira Halimatun Azizah</h3>
+            </div>
+            <p>Website ini dibuat oleh Mahasiswa Sains Informasi Geografi untuk memudahkan warga Kota Bandung dan sekitarnya mencari toko bunga.</p>
+            <p>© 2025 Flower On Map</p>
+        </div>
+    </div>
+ <script src="script.js"></script>
+
+</body>
+</html>
